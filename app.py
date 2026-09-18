@@ -56,6 +56,28 @@ def leer_adjunto(archivo):
     return archivo.name, texto
 
 
+def aplanar(filas):
+    """Convierte listas y diccionarios anidados en texto para mostrarlos en una tabla."""
+    planas = []
+    for fila in filas:
+        plana = {}
+        for clave, valor in fila.items():
+            if isinstance(valor, list):
+                plana[clave] = ", ".join(v["nota"] if isinstance(v, dict) and "nota" in v else str(v) for v in valor)
+            else:
+                plana[clave] = valor
+        planas.append(plana)
+    return planas
+
+
+def mostrar_respuesta(texto):
+    """Los resúmenes de siete secciones van en texto plano; las respuestas de chat, en Markdown."""
+    if texto.lstrip().startswith("1."):
+        st.text(texto)
+    else:
+        st.markdown(texto)
+
+
 def mostrar_evento(evento):
     """Dibuja un paso del ciclo del Run."""
     estado = evento["estado"]
@@ -129,25 +151,33 @@ with tab_correo:
             respuesta = correr(contenido, f"Correo: {asunto}")
             if respuesta:
                 with st.container(border=True):
-                    st.markdown(respuesta)
+                    mostrar_respuesta(respuesta)
         elif st.session_state.runs:
             ultimo = st.session_state.runs[-1]
             st.caption(f"Último Run: {ultimo['titulo']}")
             with st.container(border=True):
-                st.markdown(ultimo["respuesta"])
+                mostrar_respuesta(ultimo["respuesta"])
         else:
             st.info("Escribe o pega un correo y pulsa **Procesar correo**. Aquí verás cada estado del Run y el resumen final.")
 
 with tab_chat:
     st.subheader("Conversación con el asistente dentro del hilo")
     for mensaje in st.session_state.hilo:
+        contenido = mensaje.get("content") or ""
         if mensaje["role"] == "user":
             with st.chat_message("user"):
-                es_correo = mensaje["content"].startswith("CORREO ENTRANTE")
-                st.markdown(("📧 Correo procesado:\n\n```text\n" + mensaje["content"][:600] + "\n```") if es_correo else mensaje["content"])
-        elif mensaje["role"] == "assistant" and mensaje.get("content"):
+                if contenido.startswith("CORREO ENTRANTE"):
+                    with st.expander("📧 Correo procesado (clic para ver)"):
+                        st.text(contenido)
+                else:
+                    st.markdown(contenido)
+        elif mensaje["role"] == "assistant" and contenido:
             with st.chat_message("assistant"):
-                st.markdown(mensaje["content"])
+                if contenido.lstrip().startswith("1."):
+                    with st.expander("📋 Resumen del Run para el equipo (clic para ver)"):
+                        st.text(contenido)
+                else:
+                    st.markdown(contenido)
     pregunta = st.chat_input("Pregunta o instrucción para el asistente (por ejemplo: ¿qué queda pendiente con TechCorp?)")
     if pregunta:
         with st.chat_message("user"):
@@ -155,7 +185,7 @@ with tab_chat:
         with st.chat_message("assistant"):
             respuesta = correr(pregunta, f"Instrucción: {pregunta[:40]}")
             if respuesta:
-                st.markdown(respuesta)
+                mostrar_respuesta(respuesta)
 
 with tab_sistemas:
     c1, c2, c3 = st.columns(3)
@@ -163,12 +193,12 @@ with tab_sistemas:
     c1.metric("Tickets en Jira", len(tickets))
     c2.metric("Eventos en el calendario", len(eventos))
     c3.metric("Contactos en el CRM", len(contactos))
-    st.subheader("Jira (simulado)")
-    st.dataframe(tickets, width="stretch") if tickets else st.caption("Sin tickets todavía.")
-    st.subheader("Google Calendar (simulado)")
-    st.dataframe(eventos, width="stretch") if eventos else st.caption("Sin eventos todavía.")
-    st.subheader("CRM (simulado)")
-    st.dataframe(contactos, width="stretch") if contactos else st.caption("Sin contactos todavía.")
+    for titulo, filas in (("Jira (simulado)", tickets), ("Google Calendar (simulado)", eventos), ("CRM (simulado)", contactos)):
+        st.subheader(titulo)
+        if filas:
+            st.dataframe(aplanar(filas), width="stretch")
+        else:
+            st.caption("Sin registros todavía.")
 
 with tab_runs:
     if not st.session_state.runs:
