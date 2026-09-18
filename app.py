@@ -132,7 +132,7 @@ tab_correo, tab_chat, tab_sistemas, tab_runs = st.tabs(
 )
 
 with tab_correo:
-    col_izq, col_der = st.columns([1, 1])
+    col_izq, col_der = st.columns([1, 1.25])
     with col_izq:
         st.subheader("Correo entrante")
         remitente = st.text_input("De", "Ana Torres <ana.torres@techcorp.com>")
@@ -142,23 +142,26 @@ with tab_correo:
         usar_ejemplo = st.checkbox("Usar el adjunto de ejemplo (requisitos iniciales de TechCorp)", value=archivo is None)
         procesar = st.button("▶️ Procesar correo (crear Run)", type="primary")
     with col_der:
-        st.subheader("Ciclo del Run y respuesta para el equipo")
+        st.subheader("Ciclo del Run")
+        respuesta = None
         if procesar:
             nombre_adjunto, texto_adjunto = leer_adjunto(archivo)
             if texto_adjunto is None and usar_ejemplo and ADJUNTO_EJEMPLO.exists():
                 nombre_adjunto, texto_adjunto = ADJUNTO_EJEMPLO.name, ADJUNTO_EJEMPLO.read_text(encoding="utf-8")
             contenido = formatear_correo(remitente, asunto, cuerpo, nombre_adjunto, texto_adjunto)
             respuesta = correr(contenido, f"Correo: {asunto}")
-            if respuesta:
-                with st.container(border=True):
-                    mostrar_respuesta(respuesta)
         elif st.session_state.runs:
             ultimo = st.session_state.runs[-1]
+            respuesta = ultimo["respuesta"]
             st.caption(f"Último Run: {ultimo['titulo']}")
-            with st.container(border=True):
-                mostrar_respuesta(ultimo["respuesta"])
+            for evento in ultimo["registro"]:
+                mostrar_evento(evento)
         else:
-            st.info("Escribe o pega un correo y pulsa **Procesar correo**. Aquí verás cada estado del Run y el resumen final.")
+            st.info("Escribe o pega un correo y pulsa **Procesar correo**. Aquí verás cada estado del Run y, debajo, el resumen para el equipo.")
+    if respuesta:
+        st.subheader("Respuesta para el equipo interno")
+        with st.container(border=True):
+            mostrar_respuesta(respuesta)
 
 with tab_chat:
     st.subheader("Conversación con el asistente dentro del hilo")
