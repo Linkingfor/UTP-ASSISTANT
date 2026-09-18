@@ -1,0 +1,22 @@
+TechCorp - Requisitos iniciales del módulo de pagos (versión 0.1)
+
+1. Alcance
+El módulo de pagos debe permitir cobrar a los clientes de TechCorp con tarjeta de crédito y débito desde la aplicación web y la aplicación móvil.
+
+2. Integración con pasarela de pagos
+- Integración con al menos una pasarela de pagos con tarjeta (Niubiz o Culqi).
+- Soporte para cobros en soles y en dólares.
+- Tokenización de tarjetas para pagos recurrentes.
+
+3. Conciliación
+- Conciliación diaria automática de las transacciones contra el reporte de la pasarela.
+- Reporte de diferencias enviado por correo al área de finanzas.
+
+4. Seguridad
+- Cumplimiento de PCI DSS para el manejo de datos de tarjeta.
+- Registro de auditoría de cada transacción.
+
+5. Pendientes por definir
+- Volumen mensual estimado de transacciones.
+- Necesidad de facturación electrónica integrada con SUNAT.
+- Fecha objetivo de salida a producción.

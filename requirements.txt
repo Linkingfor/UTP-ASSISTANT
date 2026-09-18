@@ -1,0 +1,6 @@
+streamlit>=1.47
+openai>=1.50
+python-dotenv>=1.0
+truststore>=0.10
+pypdf>=4.0
+pandas>=2.0
