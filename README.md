@@ -31,7 +31,7 @@ La carpeta `datos/` también guarda los hilos por cliente (`hilos.json`) y la au
 
 ## Diseño y tecnología
 
-El diseño sigue la arquitectura de la API de Asistentes de OpenAI (Assistant, Thread, Run, `requires_action`, `submit_tool_outputs`). Como esa API es de pago, la implementación usa la **API gratuita de Google Gemini** a través de su endpoint compatible con OpenAI, con la misma librería `openai` de Python:
+El diseño sigue el patrón de Asistentes (Assistant, Thread, Run, `requires_action`, `submit_tool_outputs`) y lo implementa sobre la **API gratuita de Google Gemini**: Gemini aporta el modelo y las llamadas a funciones, y el orquestador en Python guarda los hilos, controla los estados de cada Run y ejecuta las funciones. Se accede al endpoint de Gemini con el cliente `openai` de Python, que Google documenta como compatible:
 
 | Concepto del diseño | En el código |
 |---------------------|--------------|

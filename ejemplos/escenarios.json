@@ -5,7 +5,7 @@
     "asunto": "Re: Propuesta para el módulo de pagos",
     "cuerpo": "Hola equipo de UTPConsult, gracias por la propuesta. Nos interesa avanzar. ¿Podríamos tener una reunión la próxima semana para discutir los detalles técnicos del módulo de pagos? Adjunto un documento con algunos requisitos iniciales.\n\nSaludos,\nAna Torres\nTechCorp",
     "adjunto": true,
-    "espera": "Contacto en el CRM en etapa propuesta_aceptada, tickets por cada requisito del adjunto y tres opciones de fecha en el borrador, sin agendar en firme porque la fecha es ambigua."
+    "espera": "Contacto en el CRM en etapa propuesta_aceptada, una épica que cite las secciones del adjunto y liste los puntos por definir como preguntas y tres opciones de fecha en el borrador, sin agendar en firme porque la fecha es ambigua."
   },
   {
     "nombre": "2. Confirmación de fecha en el mismo hilo (TechCorp)",

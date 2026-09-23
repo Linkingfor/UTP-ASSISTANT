@@ -258,7 +258,7 @@ with st.sidebar:
 
 # ---------- Zona principal ----------
 st.title("📨 UTP Assistant")
-st.caption("Asistente de gestión de proyectos y ventas de UTPConsult · Tarea Académica 2 · Python + Streamlit + API compatible con OpenAI (Gemini)")
+st.caption("Asistente de gestión de proyectos y ventas de UTPConsult · Tarea Académica 2 · Python + Streamlit + Google Gemini (API gratuita)")
 
 tab_correo, tab_chat, tab_sistemas, tab_registro = st.tabs(
     ["📥 Procesar correo", "💬 Conversar con el asistente", "🗂️ Sistemas simulados y aprobaciones", "🧾 Registro y auditoría"]
